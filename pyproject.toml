@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "msgmascsgeo"
+version = "0.1.0"
+authors = [
+    {name = "Mario D'Amore", email = "mario.damore@dlr.de"},
+]
+description = "Functions to calculate MESSENGER MASCS VIS geometries."
+license = {file = "LICENSE"}
+
+[tool.setuptools]
+packages = ["msgmascsgeo"]  # list of folders that contain the packages (["."] by default)

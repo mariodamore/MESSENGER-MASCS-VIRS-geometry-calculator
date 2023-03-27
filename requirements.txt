@@ -1,0 +1,13 @@
+# local package
+#-e .
+
+# external requirements
+geopandas
+msgmascsgeo
+numpy
+osgeo
+pandas
+rich
+shapely
+spiceypy
+tqdm
