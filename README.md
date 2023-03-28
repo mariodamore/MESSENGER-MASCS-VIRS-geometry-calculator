@@ -1,5 +1,3 @@
-# Intro
-
 ## General description
 
 **This repository is Work In Progress**
@@ -11,6 +9,10 @@ This work was presented at [Lunar and Planetary Science Conference 2023](https:/
 - Authors : D'Amore M.* Helbert J. Maturilli A. Domingue D. L.
 - Title : [MESSENGER MASCS VIRS Updated Geometry #2048](https://www.hou.usra.edu/meetings/lpsc2023/pdf/2048.pdf)
 - Abstract : MASCS instrument was onboard the NASA MESSENGER. MASCS acquired reflectance with an average 5-km scale. We computed MASCS geometries with an added DTM model.
+
+If you use this software, please cite it with [DOI: 10.5281/zenodo.7778374 ](https://doi.org/10.5281/zenodo.7778374) 
+
+[![DOI](https://www.zenodo.org/badge/612290628.svg)](https://www.zenodo.org/badge/latestdoi/612290628)
 
 ## Summary
 
