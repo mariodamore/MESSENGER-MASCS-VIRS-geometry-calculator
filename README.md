@@ -12,8 +12,7 @@ This work was presented at [Lunar and Planetary Science Conference 2023](https:/
 - Title : [MESSENGER MASCS VIRS Updated Geometry #2048](https://www.hou.usra.edu/meetings/lpsc2023/pdf/2048.pdf)
 - Abstract : MASCS instrument was onboard the NASA MESSENGER. MASCS acquired reflectance with an average 5-km scale. We computed MASCS geometries with an added DTM model.
 
-# Work In Progres - description below is from another project
-
+## Summary
 
 The points I tried to address:
 
