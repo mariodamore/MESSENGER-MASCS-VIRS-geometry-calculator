@@ -35,14 +35,15 @@ An example run is in `notebooks/SPICE_MASCS.ipynb`.
 To run the notebooks one need to :
 
 1. Install all the dependencies in `requirements.txt` .I suggest use a [conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) to deal with the geo tools install like gdal etc. I suggest [miniconda](https://docs.conda.io/en/latest/miniconda.html) or [conda-forge/miniforge: A conda-forge distribution.](https://github.com/conda-forge/miniforge) nowadays.
-2. Download the [SPICE data for Messenger mission](https://naif.jpl.nasa.gov/pub/naif/pds/data/mess-e_v_h-spice-6-v1.0/messsp_1000/) (~45GB). One can also subset the SPICE data for a small time window [here](https://naif.jpl.nasa.gov/cgi-bin/subsetds.pl?dataset=mess-e_v_h-spice-6-v1.0/messsp_1000).
-3. Download (some) MASCS data from [UVVS and VIRS CDRs and DDRs, version 2 (MESSMAS_2101)](https://pds-geosciences.wustl.edu/missions/messenger/mascs.htm)  
-4. Download ESA Mercury 3D model from [esa_generic](https://s2e2.cosmos.esa.int/bitbucket/projects/spice_kernels/repos/esa_generic/browse), Mercury data are in `kernels/dsk/planets`.
-5. Adapt the PATH in the SPICE metakernel from 3.
-6. Add ESA 3D model to 3. . i.e. create  a symlink from `esa_generic/kernels/dsk/planets/dsk` to main directory of messsp_1000 SPICE kernel.
-7. Add the new 3D model in metakernel like `'$KERNELS/dsk/planets/mercury_m002_mes_v01.bds'`
+2. Download the [SPICE data for Messenger mission](https://naif.jpl.nasa.gov/pub/naif/pds/data/mess-e_v_h-spice-6-v1.0/messsp_1000/) (~45GB). One can also subset the SPICE data for a small time window [here](https://naif.jpl.nasa.gov/cgi-bin/subsetds.pl?dataset=mess-e_v_h-spice-6-v1.0/messsp_1000). In [tree/main/data/raw/spice_kernels/NASA](tree/main/data/raw/spice_kernels/NASA) there is a script to download the minimal data to run the noteook (~950MB).
+3. Download (some) MASCS data from [UVVS and VIRS CDRs and DDRs, version 2 (MESSMAS_2101)](https://pds-geosciences.wustl.edu/missions/messenger/mascs.htm). A test file is available in [data/raw/test/mess-e_v_h-mascs-3-virs-cdr-caldata-v1/messmas_2101/data/ddr/orb/virs/mascs20110812/vis](tree/main/data/raw/test/mess-e_v_h-mascs-3-virs-cdr-caldata-v1/messmas_2101/data/ddr/orb/virs/mascs20110812/vis) and it is already in the notebook.
+4. Download ESA Mercury 3D model from [esa_generic](https://s2e2.cosmos.esa.int/bitbucket/projects/spice_kernels/repos/esa_generic/browse), Mercury data are in `kernels/dsk/planets`. A script to download the data with git is in  [tree/main/data/raw/spice_kernels/ESA/clone_ESA_DSK.sh](tree/main/data/raw/spice_kernels/ESA/clone_ESA_DSK.sh). 
+5. Adapt the PATH in the SPICE metakernel from 3, example metakernel adapted is already in [tree/main/data/raw/spice_kernels/NASA/msgr_2011_v10_110812_110812.tm](tree/main/data/raw/spice_kernels/NASA/msgr_2011_v10_110812_110812.tm).
+6. Add ESA 3D model to 3. . i.e. create  a symlink from `ESA/kernels/dsk/planets/dsk` to main directory of `messsp_1000` SPICE kernel. Example code to do this is already in the notebook. 
+7. Add the new 3D model in metakernel like `'$KERNELS/dsk/planets/mercury_m002_mes_v01.bds'`. Example metakernel is already adapted.
 8. Install this package `msgmascsgeo` with `make install_develop` or `pip install --editable` .
 9. Run the notebook or your code.
+10. (maybe) enjoy the result.
 
 ###  Directory structure
 

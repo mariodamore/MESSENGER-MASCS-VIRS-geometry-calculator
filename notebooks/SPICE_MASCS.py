@@ -42,12 +42,6 @@ from IPython.display import display
 
 import geopandas as gpd
 
-# %%
-kernels_basepath = pathlib.Path('~/Documents/work/MESSENGER/MASCS_mda_dlr_processed/spice_kernels_messenger/data').expanduser()
-print(f'{kernels_basepath=}')
-print(f'{kernels_basepath.exists()=}')
-
-
 # %% [markdown]
 # ## MASCS Data
 
@@ -63,20 +57,18 @@ import shapely
 from IPython.display import display
 
 # %%
-file = "../data/raw/test/mess-e_v_h-mascs-3-virs-cdr-caldata-v1/messmas_2101/data/ddr/ob3/virs/mascs20131104/vis/virsvd_ob3_13308_015025.lbl" 
-
 file = "../data/raw/test/mess-e_v_h-mascs-3-virs-cdr-caldata-v1/messmas_2101/data/ddr/orb/virs/mascs20110812/vis/virsvd_orb_11224_214005.lbl"
 
 # %%
 df = gpd.read_file(file,engine='fiona').drop(columns=['SPARE_1', 'SPARE_2', 'SPARE_3','SPARE_4', 'SPARE_5',]) # default engine, no warnings
 
 # %%
-df.head(3).T
-
-# %%
 # convert SPECTRUM_UTC_TIME to python datetime object 
 from datetime import datetime
 df['SPECTRUM_UTC_TIME'] = pd.to_datetime(df['SPECTRUM_UTC_TIME'].map(lambda x : datetime.strptime(x.strip(), '%y%jT%H:%M:%S')))
+
+# %%
+df.iloc[[0,-1]].T
 
 # %%
 # drop the index in a column
@@ -110,6 +102,18 @@ points_list = [shapely.geometry.Point(p)  for p in  stacked_latlon[:,:,corners_i
 #
 
 # %%
+import spiceypy
+
+# %%
+kernels_basepath = pathlib.Path().resolve() / '../data/raw/spice_kernels/NASA/messsp_1000/data'
+# kernels_basepath = pathlib.Path('/home/kidpixo/Documents/work/MESSENGER/MASCS_mda_dlr_processed/spice_kernels_messenger/data')
+
+print(f'{kernels_basepath=}')
+print(f'{kernels_basepath.exists()=}')
+
+
+# %%
+# symlink SPICE path to /tmp/spice_kernels_messenger > SPICE Paths are limited to 255 chars!!!! 
 original_spice_dir = pathlib.Path(kernels_basepath)
 
 spice_dir = pathlib.Path('/tmp/spice_kernels_messenger')
@@ -118,13 +122,20 @@ if not spice_dir.exists():
     spice_dir.symlink_to(original_spice_dir)
 
 # %%
-import spiceypy
+# symlink SPICE path to /tmp/spice_kernels_messenger > SPICE Paths are limited to 255 chars!!!! 
+esa_dsk_path = pathlib.Path('').resolve() / '../data/raw/spice_kernels/ESA/kernels/dsk'
+
+new_dsk_path = original_spice_dir / 'dsk' 
+
+if not new_dsk_path.exists():
+    new_dsk_path.symlink_to(esa_dsk_path)
 
 # %%
 spiceypy.kclear()# Clear the Spice kernels pool
 
 # %%
-metakernels_paths = list(pathlib.Path(kernels_basepath / '../extras/mk_mod').glob('*tm'))
+metakernels_paths = list(pathlib.Path(kernels_basepath / '../..').glob('*tm'))
+# metakernels_paths = list(pathlib.Path(kernels_basepath / '../extras/mk_mod').glob('*tm'))
 metakernels_paths_dict = {p.stem.split('_')[1]:p for p in metakernels_paths}
 metakernels_paths_dict
 
@@ -260,6 +271,19 @@ ax = gdf_pds_poly.head(2).plot(figsize=[20,8],facecolor='none',column='SC_TIME',
 gdf_pds_point.head(2).plot(ax=ax)
 
 # %%
+(method,
+target,
+spiceypy.utc2et(str(df.loc[200,'SPECTRUM_UTC_TIME'])),
+df.loc[200,'pid'],
+target_frame,
+aberration_correction,
+observer,
+sensor_frame,
+radii,
+tarid,
+bsight)
+
+# %%
 # 1 fov point for fixed times 
 spicefuncs.geometry_intersect(
                     method,
@@ -351,19 +375,22 @@ geofovs_df.columns
 # %%
 fig, axs = plt.subplots(ncols=2,nrows=2,figsize=[15,10])
 axs = axs.flatten()
+
 gdf_pds_poly.set_index('pid').loc[geounion_gdf.pid].plot(ax=axs[0],column='INCIDENCE_ANGLE',edgecolor='black',cmap=plt.cm.Spectral_r,alpha=0.75)
 axs[0].set_title('PDS, color = incidence angle');
+
 gdf_pds_poly.set_index('pid').loc[geounion_gdf.pid]['INCIDENCE_ANGLE'].plot(marker='.',ax=axs[2])
 axs[2].set_title('PDS, incidence angle');
 
+
 geofovs_df.plot(ax=axs[1],column='mean_incdnc',edgecolor='black',cmap=plt.cm.Spectral_r,alpha=0.75)
 axs[1].set_title('NEW-Union, color = incidence angle');
+
 geofovs_df['mean_incdnc'].plot(marker='.',ax=axs[3])
 axs[3].set_title('NEW-Union, incidence angle');
 
 _ = [a.set_xlabel('Sequential Meas. Index') for a in axs[-2:]]
 _ = [(a.set_xlabel('Longitude'),a.set_ylabel('Latitude')) for a in axs[:2]]
-
 
 
 # %% [markdown]
@@ -385,5 +412,3 @@ geounion_gdf.to_wkt().rename(columns={'geometry':'fov'}).to_csv( output / 'NEW-F
 #  if yu wish, change the driver to shapefile 
 gdf_pds_poly.to_file(output / 'NEW-iFOV.geojson', driver="GeoJSON")
 geounion_gdf.to_file(output / 'NEW-FOV-union-convex.geojson', driver="GeoJSON")
-
-# %%
